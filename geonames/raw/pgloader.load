@@ -1,0 +1,8 @@
+load csv
+  from /Users/zaheridor/Downloads/geonames/allCountries.txt
+  into pgsql://postgres@/postgres
+  target table raw.geonames
+  with fields terminated by '\t',
+       fields optionally enclosed by '§',
+       fields escaped by '%',
+       truncate;
