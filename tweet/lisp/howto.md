@@ -4,11 +4,17 @@
 `
 (ql:quickload "postmodern")
 (ql:quickload :cxml)
-(ql:quickload :yason)
-(ql:quickload :zip)
 `
-## Cargar package: ##
+
+## Compilar código LISP ##
+^c ^k
+
+## Ejecución ##
+### Cargar package: ###
 `(in-package shakes)`
 
-## Ejecutar programa: ##
-`(parse-document "dream.xml")`
+### Ejecutar programa (ruta absoluta): ###
+`(parse-document "/path/to/dream.xml")`
+
+## Alternativa ejecución ##
+`(shakes::parse-document "/path/to/dream.xml")`
