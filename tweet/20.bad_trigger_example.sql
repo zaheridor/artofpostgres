@@ -1,4 +1,5 @@
 --Update the counters of RTs and FAVs esch time there's a realted insert in the tweet.activity table.
+--This example it's no prepared to deal with concurrency, because it allows the duplication of rows with the same primeray key on one instance.
 begin;
 
 create table twcache.daily_counters
