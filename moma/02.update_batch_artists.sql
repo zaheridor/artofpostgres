@@ -9,7 +9,7 @@ create temp table batch
  )
  on commit drop;
 
-\copy batch from 'artists/artists.2020-10-01.csv' with csv header delimiter ','
+\copy batch from 'artists/artists.2020-10-21.csv' with csv header delimiter ','
 
 with upd as
 (
@@ -40,6 +40,7 @@ with upd as
                        from moma.artist
                       where artist.constituentid = batch.constituentid
                 )
+      on conflict (constituentid) do nothing
       returning artist.constituentid
 )
 select (select count(*) from upd) as updates,
