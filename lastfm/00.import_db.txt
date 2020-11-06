@@ -1,0 +1,36 @@
+# download db (SQLite) #
+curl -L -o /tmp/lastfm_tags.db
+       http://labrosa.ee.columbia.edu/ \ 
+              millionsong/sites/default/files/lastfm/lastfm_tags.db
+
+# enter psql #
+sudo -u postgres psql
+
+# create empty db in psql #
+CREATE DATABASE lastfm;
+
+# load db (SQLite) into postgres #
+pgloader lastfm_tags.db pgsql:///lastfm
+
+
+# Comandos en Slime: #
+
+## Cargar librerías por quickload: ##
+`
+(ql:quickload "postmodern")
+(ql:quickload :zip)
+(ql:quickload :yason)
+`
+
+## Compilar código LISP ##
+^c ^k
+
+## Ejecución ##
+### Cargar package: ###
+`(in-package lastfm)`
+
+### Ejecutar programa (ruta absoluta): ###
+`(process-zipfile "/path/to/file.zip")`
+
+## Alternativa ejecución ##
+`(lastfm::process-zipfile "/path/to/file.zip")`
