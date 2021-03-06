@@ -1,0 +1,59 @@
+LOAD ARCHIVE FROM GeoLite2-City-CSV_latest.zip into postgresql://postgres@localhost:5432/postgres
+
+BEFORE LOAD EXECUTE '01.base_ddl.sql'
+
+LOAD CSV FROM FILENAME MATCHING ~/GeoLite2-City-Locations-en.csv/ WITH ENCODING iso-8859-1
+(
+geoname_id,
+locale_code [ null if blanks ],
+continent_code [ null if blanks ],
+continent_name [ null if blanks ],
+country_iso_code [ null if blanks ],
+country_name [ null if blanks ],
+subdivision_1_iso_code [ null if blanks ],
+subdivision_1_name [ null if blanks ],
+subdivision_2_iso_code [ null if blanks ],
+subdivision_2_name [ null if blanks ],
+city_name [ null if blanks ],
+metro_code [ null if blanks ],
+time_zone [ null if blanks ],
+is_in_european_union [ null if blanks ]
+)
+INTO postgresql://postgres@localhost:5432/postgres
+TARGET TABLE geolite.location
+(
+geoname_id,continent_name,country_name,subdivision_1_name,city_name,metro_code
+)
+WITH csv header,
+drop indexes,
+fields optionally enclosed by '"',
+fields escaped by double-quote,
+fields terminated by ','
+
+AND LOAD CSV FROM FILENAME MATCHING ~/GeoLite2-City-Blocks-IPv4.csv/ WITH ENCODING iso-8859-1
+(
+network_start_integer,
+network_last_integer,
+geoname_id,
+registered_country_geoname_id [ null if blanks ],
+represented_country_geoname_id [ null if blanks ],
+is_anonymous_proxy [ null if blanks ],
+is_satellite_provider [ null if blanks ],
+postal_code [ null if blanks ],
+latitude,
+longitude,
+accuracy_radius [ null if blanks ]
+)
+INTO postgresql://postgres@localhost:5432/postgres
+TARGET TABLE geolite.blocks
+(
+iprange ip4r using (ip-range network_start_integer network_last_integer),
+geoname_id,
+postal_code,
+location point using (format nil "(~a,~a)" longitude latitude)
+)
+WITH csv header,
+drop indexes,
+fields optionally enclosed by '"',
+fields escaped by double-quote,
+fields terminated by ',';
